@@ -7,6 +7,8 @@ import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.awt.*;
+
 @Mod.EventBusSubscriber
 public class ServerExecutionEvents {
 
@@ -14,7 +16,8 @@ public class ServerExecutionEvents {
     public static void onServerStarted(ServerStartedEvent event) throws InterruptedException {
         new Bot();
 
-        Bot.getInstance().sendEmbed(DiscordChannelType.STATUS_CHANNEL, "Server", "Stared!");
+        PlayerJoinLeaveEventHandler.setPlayerCountActivity(false);
+        Bot.getInstance().sendEmbed(DiscordChannelType.STATUS_CHANNEL, "Server", "Stared!", Color.BLUE);
     }
 
     @SubscribeEvent
@@ -23,7 +26,7 @@ public class ServerExecutionEvents {
             return;
         }
 
-        Bot.getInstance().sendEmbed(DiscordChannelType.STATUS_CHANNEL, "Server", "Stopped!");
+        Bot.getInstance().sendEmbed(DiscordChannelType.STATUS_CHANNEL, "Server", "Stopped!", Color.red);
         Bot.getInstance().shutdown();
     }
 }

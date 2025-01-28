@@ -8,8 +8,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
-import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.internal.utils.JDALogger;
 
 import java.awt.*;
@@ -52,6 +51,8 @@ public class Bot {
         jda = JDABuilder.createDefault(botToken)
                 .setActivity(Activity.customStatus("Kur"))
                 .setStatus(OnlineStatus.ONLINE)
+                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
+                .addEventListeners(new MessageReceivedListener())
                 .build();
 
         jda.awaitReady();
@@ -102,7 +103,19 @@ public class Bot {
                 .queue();
     }
 
+    public String getChatChannelID() {
+        return chatChannel == null ? "" : chatChannel.getId();
+    }
+
+    public String getBotID() {
+        return jda.getToken();
+    }
+
     public void shutdown() {
         jda.shutdown();
+    }
+
+    public void setBotActivity(String text) {
+        jda.getPresence().setActivity(Activity.customStatus(text));
     }
 }

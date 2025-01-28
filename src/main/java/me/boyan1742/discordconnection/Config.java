@@ -41,9 +41,11 @@ public class Config {
 
     private static final ForgeConfigSpec.ConfigValue<String> ACTIVITY_NO_PLAYERS = BUILDER.pop().push("messages").comment("The text of the bot when there are none players online.").define("noPlayersText", "No-one is playing!");
     private static final ForgeConfigSpec.ConfigValue<String> ACTIVITY_ONE_PLAYER = BUILDER.comment("The text of the bot when there is one player online.").define("onePlayerText", "One player is online!");
-    private static final ForgeConfigSpec.ConfigValue<String> ACTIVITY_TWO_PLAYERS = BUILDER.comment("The text of the bot when there are two or more players online.").define("twoPlayersText", "{} players are online!");
+    private static final ForgeConfigSpec.ConfigValue<String> ACTIVITY_TWO_PLAYERS = BUILDER.comment("The text of the bot when there are two or more players online.").define("twoPlayersText", " players are online!");
 
     private static final ForgeConfigSpec.BooleanValue EMOJIFUL_REPLACE_DASH_WITH_UNDERSCORE = BUILDER.pop().push("EMOJIFUL").comment("A compatibility setting with the mod 'Emojiful' that makes it's emoji that have a dash be compatible with discord (discord has the same emoji name/id but with underscore).").define("emojifulReplaceDashWithUnderscore", false);
+
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> IGNORED_USERS_LIST = BUILDER.pop().push("lists").comment("A list of ignored users. These users' actions will not be printed in the specific discord channels.").defineList("ignoredUsers", List.of("Admin"), x -> x instanceof String str && !str.isEmpty());
 
     static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
@@ -61,6 +63,11 @@ public class Config {
     public static String serverLogsChannelID;
     public static Set<String> ignoredServerCommands;
     public static Set<String> ignoredUsers;
+
+    public static String textActivityNoPlayers;
+    public static String textActivityOnePlayer;
+    public static String textActivityTwoOrMorePlayers;
+
     public static boolean emojifulReplaceDashWithUnderscore;
 
     //private static boolean validateItemName(final Object obj) {
@@ -85,9 +92,13 @@ public class Config {
         chatChannelID = CHAT_CHANNEL_ID.get();
         serverLogsChannelID = SERVER_LOGS_CHANNEL_ID.get();
 
+        textActivityNoPlayers = ACTIVITY_NO_PLAYERS.get();
+        textActivityOnePlayer = ACTIVITY_ONE_PLAYER.get();
+        textActivityTwoOrMorePlayers = ACTIVITY_TWO_PLAYERS.get();
+
         emojifulReplaceDashWithUnderscore = EMOJIFUL_REPLACE_DASH_WITH_UNDERSCORE.get();
 
         ignoredServerCommands = new HashSet<>();
-        ignoredUsers = new HashSet<>();
+        ignoredUsers = new HashSet<>(IGNORED_USERS_LIST.get());
     }
 }
