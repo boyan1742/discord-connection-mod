@@ -68,6 +68,21 @@ public class Bot {
         INSTANCE = this;
     }
 
+    public void sendMessage(DiscordChannelType channelType, String message) {
+        if(INSTANCE == null) {
+            return;
+        }
+
+        TextChannel channel = getChannelFromType(channelType);
+
+        if (channel == null) {
+            DiscordConnection.LOGGER.info("One of the channels might not be setup or not existing! ChannelType: {}", channelType);
+            return;
+        }
+
+        channel.sendMessage(message).queue();
+    }
+
     public void sendEmbed(DiscordChannelType channelType, String title, String contents) {
         sendEmbed(channelType, title, contents, Color.black);
     }
@@ -77,17 +92,7 @@ public class Bot {
             return;
         }
 
-        TextChannel channel;
-
-        switch (channelType) {
-            case STATUS_CHANNEL -> channel = statusChannel;
-            case JOIN_LEAVE_CHANNEL -> channel = joinLeaveChannel;
-            case DEATHS_CHANNEL -> channel = deathsChannel;
-            case ADVANCEMENTS_CHANNEL -> channel = advancementsChannel;
-            case CHAT_CHANNEL -> channel = chatChannel;
-            case SERVER_LOGS_CHANNEL -> channel = serverLogsChannel;
-            default -> channel = null;
-        }
+        TextChannel channel = getChannelFromType(channelType);
 
         if (channel == null) {
             DiscordConnection.LOGGER.info("One of the channels might not be setup or not existing! ChannelType: {}", channelType);
@@ -101,6 +106,22 @@ public class Bot {
                         .setColor(color)
                         .build())
                 .queue();
+    }
+
+    private TextChannel getChannelFromType(DiscordChannelType channelType) {
+        TextChannel channel;
+
+        switch (channelType) {
+            case STATUS_CHANNEL -> channel = statusChannel;
+            case JOIN_LEAVE_CHANNEL -> channel = joinLeaveChannel;
+            case DEATHS_CHANNEL -> channel = deathsChannel;
+            case ADVANCEMENTS_CHANNEL -> channel = advancementsChannel;
+            case CHAT_CHANNEL -> channel = chatChannel;
+            case SERVER_LOGS_CHANNEL -> channel = serverLogsChannel;
+            default -> channel = null;
+        }
+
+        return channel;
     }
 
     public String getChatChannelID() {

@@ -31,6 +31,7 @@ public class Config {
     //private static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER.comment("A list of items to log on common setup.").defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
 
     private static final ForgeConfigSpec.ConfigValue<String> BOT_TOKEN = BUILDER.comment("The discord bot's token. DO NOT SHARE THIS!!!").define("botToken", DEFAULT_BOT_TOKEN);
+    private static final ForgeConfigSpec.BooleanValue ECHO_SERVER_COMMANDS = BUILDER.comment("Should commands executed on the server and by it be echoed inside of discord.").define("echoServerCommands", false);
 
     private static final ForgeConfigSpec.ConfigValue<String> STATUS_CHANNEL_ID = BUILDER.push("channelIDs").comment("The discord channel's ID where all server status messages will be sent.").define("statusChannelID", "0");
     private static final ForgeConfigSpec.ConfigValue<String> JOIN_LEAVE_CHANNEL_ID = BUILDER.comment("The discord channel's ID where all join and leave messages will be sent.").define("joinLeaveChannelID", "0");
@@ -46,6 +47,7 @@ public class Config {
     private static final ForgeConfigSpec.BooleanValue EMOJIFUL_REPLACE_DASH_WITH_UNDERSCORE = BUILDER.pop().push("EMOJIFUL").comment("A compatibility setting with the mod 'Emojiful' that makes it's emoji that have a dash be compatible with discord (discord has the same emoji name/id but with underscore).").define("emojifulReplaceDashWithUnderscore", false);
 
     private static final ForgeConfigSpec.ConfigValue<List<? extends String>> IGNORED_USERS_LIST = BUILDER.pop().push("lists").comment("A list of ignored users. These users' actions will not be printed in the specific discord channels.").defineList("ignoredUsers", List.of("Admin"), x -> x instanceof String str && !str.isEmpty());
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> IGNORED_SERVER_COMMANDS = BUILDER.comment("A list of ignored commands. These commands will never be printed inside of the server logs discord channel.").defineList("ignoredCommands", List.of("help", "?", "msg", "w", "say"), x -> x instanceof String str && !str.isEmpty());
 
     static final ForgeConfigSpec SPEC = BUILDER.pop().build();
 
@@ -55,12 +57,15 @@ public class Config {
     //public static Set<Item> items;
 
     public static String botToken;
+    public static boolean echoServerCommands;
+
     public static String statusChannelID;
     public static String joinLeaveChannelID;
     public static String deathsChannelID;
     public static String advancementsChannelID;
     public static String chatChannelID;
     public static String serverLogsChannelID;
+
     public static Set<String> ignoredServerCommands;
     public static Set<String> ignoredUsers;
 
@@ -85,6 +90,8 @@ public class Config {
 
         botToken = BOT_TOKEN.get();
 
+        echoServerCommands = ECHO_SERVER_COMMANDS.get();
+
         statusChannelID = STATUS_CHANNEL_ID.get();
         joinLeaveChannelID = JOIN_LEAVE_CHANNEL_ID.get();
         deathsChannelID = DEATHS_CHANNEL_ID.get();
@@ -98,7 +105,7 @@ public class Config {
 
         emojifulReplaceDashWithUnderscore = EMOJIFUL_REPLACE_DASH_WITH_UNDERSCORE.get();
 
-        ignoredServerCommands = new HashSet<>();
+        ignoredServerCommands = new HashSet<>(IGNORED_SERVER_COMMANDS.get());
         ignoredUsers = new HashSet<>(IGNORED_USERS_LIST.get());
     }
 }
