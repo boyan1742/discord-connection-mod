@@ -44,7 +44,8 @@ public class ServerExecutionEvents {
 
         if (tps < Config.lowTPSValue && Bot.getInstance() != null && Config.echoLowTPS) {
             Bot.getInstance().sendEmbed(DiscordChannelType.STATUS_CHANNEL, "Server",
-                    "[WARNING] Server tps below 4, currently: " + tps, Color.yellow);
+                    String.format("[WARNING] Server tps below %f, currently: %f", Config.lowTPSValue, tps),
+                    Color.yellow);
         }
     }
 }
