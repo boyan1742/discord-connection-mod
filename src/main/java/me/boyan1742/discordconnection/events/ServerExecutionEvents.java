@@ -1,5 +1,6 @@
 package me.boyan1742.discordconnection.events;
 
+import me.boyan1742.discordconnection.Config;
 import me.boyan1742.discordconnection.discord.Bot;
 import me.boyan1742.discordconnection.discord.DiscordChannelType;
 import net.minecraftforge.event.TickEvent;
@@ -14,7 +15,6 @@ import java.awt.*;
 public class ServerExecutionEvents {
 
     private static long lastTime = System.nanoTime();
-
 
     @SubscribeEvent
     public static void onServerStarted(ServerStartedEvent event) throws InterruptedException {
@@ -40,12 +40,11 @@ public class ServerExecutionEvents {
         double elapsedSeconds = (currentTime - lastTime) / 1_000_000_000.0;
         lastTime = currentTime;
 
-        double tps = 20.0 / elapsedSeconds; // Target TPS is 20
-        //System.out.println("Current TPS: " + tps);
+        var tps = 20.0 / elapsedSeconds; // Target TPS is 20
 
-        if (tps < 15.0 && Bot.getInstance() != null) {
+        if (tps < Config.lowTPSValue && Bot.getInstance() != null && Config.echoLowTPS) {
             Bot.getInstance().sendEmbed(DiscordChannelType.STATUS_CHANNEL, "Server",
-                    "[WARNING] Server tps below 15, currently: " + tps, Color.yellow);
+                    "[WARNING] Server tps below 4, currently: " + tps, Color.yellow);
         }
     }
 }

@@ -1,6 +1,8 @@
 package me.boyan1742.discordconnection;
 
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.awt.*;
 import java.util.regex.Matcher;
@@ -68,5 +70,27 @@ public class Utils {
         var clr = colorName.toString();
 
         return fromMinecraftColor(clr);
+    }
+
+    public static double getTPS() {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server == null) {
+            return 0.0; // Not running on a server
+        }
+
+        // Get the average tick time in milliseconds
+        double averageTickTime = mean(server.tickTimes) * 1.0E-6D;
+
+        // Calculate TPS
+        double tps = 1000.0 / averageTickTime;
+        return Math.min(tps, 20.0); // TPS cannot exceed 20
+    }
+
+    private static long mean(long[] values) {
+        long sum = 0L;
+        for (long v : values) {
+            sum += v;
+        }
+        return sum / values.length;
     }
 }

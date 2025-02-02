@@ -1,6 +1,7 @@
 package me.boyan1742.discordconnection.events;
 
 import me.boyan1742.discordconnection.Config;
+import me.boyan1742.discordconnection.Utils;
 import me.boyan1742.discordconnection.discord.Bot;
 import me.boyan1742.discordconnection.discord.DiscordChannelType;
 import net.minecraftforge.event.CommandEvent;
@@ -35,8 +36,10 @@ public class CommandEventHandler {
         var command = event.getParseResults().getReader().getString();
 
         Bot.getInstance().sendMessage(DiscordChannelType.SERVER_LOGS_CHANNEL,
-                String.format("%s executed a command: %s",
-                        player == null ? src.getDisplayName().getString() : player.getDisplayName().getString(),
+                String.format("%s executed a command: `%s`",
+                        Utils.emojifulTransformString(player == null ?
+                                src.getDisplayName().getString() :
+                                player.getDisplayName().getString()),
                         command));
     }
 }

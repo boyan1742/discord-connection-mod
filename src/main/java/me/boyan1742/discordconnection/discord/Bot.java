@@ -2,16 +2,21 @@ package me.boyan1742.discordconnection.discord;
 
 import me.boyan1742.discordconnection.Config;
 import me.boyan1742.discordconnection.DiscordConnection;
+import me.boyan1742.discordconnection.discord.commands.OnlineCommand;
+import me.boyan1742.discordconnection.discord.commands.TPSCommand;
+import me.boyan1742.discordconnection.discord.events.MessageReceivedListener;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.internal.utils.JDALogger;
 
 import java.awt.*;
+import java.util.Collections;
 
 public class Bot {
     private static Bot INSTANCE = null;
@@ -53,9 +58,18 @@ public class Bot {
                 .setStatus(OnlineStatus.ONLINE)
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .addEventListeners(new MessageReceivedListener())
+                .addEventListeners(new TPSCommand())
+                .addEventListeners(new OnlineCommand())
                 .build();
 
         jda.awaitReady();
+
+        jda.updateCommands().addCommands(Collections.emptyList()).queue();
+
+        jda.updateCommands().addCommands(
+                Commands.slash("tps", "Gives you the current server TPS."),
+                Commands.slash("online", "Lists the players that are online."))
+                .queue();
 
         statusChannel = jda.getTextChannelById(statusChannelID);
         joinLeaveChannel = jda.getTextChannelById(joinLeaveChannelID);

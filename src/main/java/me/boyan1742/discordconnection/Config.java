@@ -33,7 +33,10 @@ public class Config {
     private static final ForgeConfigSpec.ConfigValue<String> BOT_TOKEN = BUILDER.comment("The discord bot's token. DO NOT SHARE THIS!!!").define("botToken", DEFAULT_BOT_TOKEN);
     private static final ForgeConfigSpec.BooleanValue ECHO_SERVER_COMMANDS = BUILDER.comment("Should commands executed on the server and by it be echoed inside of discord.").define("echoServerCommands", false);
 
-    private static final ForgeConfigSpec.ConfigValue<String> STATUS_CHANNEL_ID = BUILDER.push("channelIDs").comment("The discord channel's ID where all server status messages will be sent.").define("statusChannelID", "0");
+    private static final ForgeConfigSpec.BooleanValue ECHO_LOW_TPS = BUILDER.push("TPS").comment("Should low tps warning be echoed to discord.").define("echoLowTPS", false);
+    private static final ForgeConfigSpec.DoubleValue LOW_TPS_VALUE = BUILDER.comment("The amount of TPS which this mod will look for and report if `echoLowTPS` is `true`.").defineInRange("lowTPSValue", 4.0, 0.0, 20.0);
+
+    private static final ForgeConfigSpec.ConfigValue<String> STATUS_CHANNEL_ID = BUILDER.pop().push("channelIDs").comment("The discord channel's ID where all server status messages will be sent.").define("statusChannelID", "0");
     private static final ForgeConfigSpec.ConfigValue<String> JOIN_LEAVE_CHANNEL_ID = BUILDER.comment("The discord channel's ID where all join and leave messages will be sent.").define("joinLeaveChannelID", "0");
     private static final ForgeConfigSpec.ConfigValue<String> DEATHS_CHANNEL_ID = BUILDER.comment("The discord channel's ID where all death messages will be sent.").define("deathsChannelID", "0");
     private static final ForgeConfigSpec.ConfigValue<String> ADVANCEMENTS_CHANNEL_ID = BUILDER.comment("The discord channel's ID where all advancements messages will be sent.").define("advancementsChannelID", "0");
@@ -58,6 +61,9 @@ public class Config {
 
     public static String botToken;
     public static boolean echoServerCommands;
+
+    public static boolean echoLowTPS;
+    public static double lowTPSValue;
 
     public static String statusChannelID;
     public static String joinLeaveChannelID;
@@ -91,6 +97,9 @@ public class Config {
         botToken = BOT_TOKEN.get();
 
         echoServerCommands = ECHO_SERVER_COMMANDS.get();
+
+        echoLowTPS = ECHO_LOW_TPS.get();
+        lowTPSValue = LOW_TPS_VALUE.get();
 
         statusChannelID = STATUS_CHANNEL_ID.get();
         joinLeaveChannelID = JOIN_LEAVE_CHANNEL_ID.get();

@@ -1,5 +1,8 @@
-package me.boyan1742.discordconnection.discord;
+package me.boyan1742.discordconnection.discord.events;
 
+import me.boyan1742.discordconnection.discord.Bot;
+import me.boyan1742.discordconnection.discord.MatchTuple;
+import me.boyan1742.discordconnection.discord.Style;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.minecraft.ChatFormatting;
