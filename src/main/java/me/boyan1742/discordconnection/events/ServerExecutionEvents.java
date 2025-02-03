@@ -15,6 +15,8 @@ import java.awt.*;
 public class ServerExecutionEvents {
 
     private static long lastTime = System.nanoTime();
+    private static long lastMessageTime = 0;
+    private static final long COOLDOWN = 30_000;
 
     @SubscribeEvent
     public static void onServerStarted(ServerStartedEvent event) throws InterruptedException {
@@ -42,10 +44,14 @@ public class ServerExecutionEvents {
 
         var tps = 20.0 / elapsedSeconds; // Target TPS is 20
 
-        if (tps < Config.lowTPSValue && Bot.getInstance() != null && Config.echoLowTPS) {
+        if (tps < Config.lowTPSValue && Bot.getInstance() != null && Config.echoLowTPS &&
+                System.currentTimeMillis() - lastMessageTime >= COOLDOWN) {
+
             Bot.getInstance().sendEmbed(DiscordChannelType.STATUS_CHANNEL, "Server",
                     String.format("[WARNING] Server tps below %f, currently: %f", Config.lowTPSValue, tps),
                     Color.yellow);
+
+            lastMessageTime = System.currentTimeMillis();
         }
     }
 }
