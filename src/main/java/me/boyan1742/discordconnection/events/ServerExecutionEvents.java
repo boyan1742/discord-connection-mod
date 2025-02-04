@@ -23,7 +23,7 @@ public class ServerExecutionEvents {
         new Bot();
 
         PlayerJoinLeaveEventHandler.setPlayerCountActivity(false);
-        Bot.getInstance().sendEmbed(DiscordChannelType.STATUS_CHANNEL, "Server", "Stared!", Color.BLUE);
+        Bot.getInstance().sendEmbed(DiscordChannelType.STATUS_CHANNEL, "Server", "Started!", Color.BLUE);
     }
 
     @SubscribeEvent
